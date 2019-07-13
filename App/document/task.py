@@ -11,8 +11,24 @@ task_INDEX.settings(
 )
 
 
+# there is 2 ways to define your serializer in document
+# a way is that you define a
 @task_INDEX.doc_type
 class TaskDocument(DocType):
+    # id = fields.IntegerField(attr='id')
+    # title = fields.StringField(
+    #     fields={
+    #         'raw': fields.StringField(analyzer='keyword'),
+    #         'suggest': fields.CompletionField(),
+    #     }
+    # )
+    # report = fields.StringField(
+    #     fields={
+    #         'raw': fields.StringField(analyzer='keyword'),
+    #         'suggest': fields.CompletionField(),
+    #     }
+    # )
+
     class Meta:
         model = Task
         fields = [

@@ -1,17 +1,15 @@
-from django.shortcuts import render
+
+from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+
+
+from django_elasticsearch_dsl_drf.constants import (
+    SUGGESTER_COMPLETION, SUGGESTER_PHRASE, SUGGESTER_TERM)
+
 from django_elasticsearch_dsl_drf.filter_backends import (
     FilteringFilterBackend,
     OrderingFilterBackend,
     SearchFilterBackend,
-    DefaultOrderingFilterBackend, FunctionalSuggesterFilterBackend)
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-# Create your views here.
-
-from django_elasticsearch_dsl_drf.constants import (
-    # ...
-    FUNCTIONAL_SUGGESTER_COMPLETION_PREFIX,
-    FUNCTIONAL_SUGGESTER_COMPLETION_MATCH,
-    SUGGESTER_COMPLETION)
+    DefaultOrderingFilterBackend,  SuggesterFilterBackend)
 
 from App.document.task import *
 
@@ -32,8 +30,27 @@ class TaskDocumentView(DocumentViewSet):
         OrderingFilterBackend,
         DefaultOrderingFilterBackend,
         SearchFilterBackend,
-        FunctionalSuggesterFilterBackend,
+        SuggesterFilterBackend,
+
     ]
+    suggester_fields = {
+        'title_suggest': {
+            'field': 'title.suggest',
+            'suggesters': [
+                SUGGESTER_TERM,
+                SUGGESTER_PHRASE,
+                SUGGESTER_COMPLETION,
+            ],
+        },
+        'report_suggest': {
+            'field': 'report.suggest',
+            'suggesters': [
+                SUGGESTER_COMPLETION,
+            ],
+        },
+
+    }
+
     search_fields = (
         'title',
         'report',
